@@ -1,5 +1,6 @@
-import type { ReactNode } from "react";
 import { Box, Flex, VStack } from "daleui";
+import type { ReactNode } from "react";
+import { Footer } from "./Footer";
 import { Header } from "./Header";
 
 interface LayoutProps {
@@ -11,6 +12,8 @@ export function Layout({ children }: LayoutProps) {
     <Box
       as="div"
       style={{
+        display: "flex",
+        flexDirection: "column",
         minHeight: "100vh",
         backgroundColor: "#f9fafb",
         color: "#111827",
@@ -20,10 +23,11 @@ export function Layout({ children }: LayoutProps) {
 
       <main
         style={{
-          maxWidth: "800px",
-          margin: "2rem auto",
-          padding: "0 1rem",
-          minHeight: "calc(100vh - 200px)",
+          flex: 1,
+          maxWidth: "1024px",
+          width: "100%",
+          margin: "0 auto",
+          padding: "64px 24px",
         }}
       >
         <Flex as="div">
@@ -32,6 +36,8 @@ export function Layout({ children }: LayoutProps) {
           </VStack>
         </Flex>
       </main>
+
+      <Footer />
     </Box>
   );
 }
