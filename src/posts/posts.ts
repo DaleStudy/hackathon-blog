@@ -7,21 +7,43 @@ export interface Post {
   slug: string;
   title: string;
   content: string;
+  excerpt: string;
+}
+
+function extractMetadata(content: string): {
+  title: string;
+  excerpt: string;
+  body: string;
+} {
+  const lines = content.split("\n");
+  const title = lines[0]?.replace(/^#\s*/, "").trim() || "";
+  
+  let excerpt = "";
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (line && !line.startsWith("#") && !line.startsWith("!") && !line.startsWith(">")) {
+      excerpt = line;
+      break;
+    }
+  }
+
+  return {
+    title,
+    excerpt: excerpt || title,
+    body: lines.slice(1).join("\n"),
+  };
 }
 
 export const posts: Post[] = Object.entries(modules).map(([path, content]) => {
   const fileName = path.replace("./", "");
   const slug = fileName.replace(/\.md$/, "");
-
-  // 간단하게: 첫 번째 줄을 제목으로, 나머지를 본문으로 사용
-  const [firstLine, ...rest] = content.split("\n");
-  const title = firstLine.replace(/^#\s*/, "").trim() || slug;
-  const body = rest.join("\n");
+  const metadata = extractMetadata(content);
 
   return {
     slug,
-    title,
-    content: body || content,
+    title: metadata.title,
+    content: metadata.body || content,
+    excerpt: metadata.excerpt,
   };
 });
 
